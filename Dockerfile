@@ -1,14 +1,18 @@
 FROM php:8.3-apache
 
+RUN apt-get update && apt-get install -y apache2
+
 RUN docker-php-ext-install pdo pdo_mysql
 
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.load
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.conf
-RUN rm -f /etc/apache2/mods-enabled/mpm_worker.load
-RUN rm -f /etc/apache2/mods-enabled/mpm_worker.conf
+RUN a2dismod mpm_event || true
+RUN a2dismod mpm_worker || true
+RUN a2dismod mpm_prefork || true
 
-RUN a2enmod mpm_prefork rewrite
+RUN a2enmod mpm_prefork
+RUN a2enmod rewrite
 
 COPY . /var/www/html/
 
 EXPOSE 80
+
+# railway apache fix
