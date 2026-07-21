@@ -1,11 +1,9 @@
-FROM php:8.3-cli
+FROM php:8.2-apache
 
 RUN docker-php-ext-install pdo pdo_mysql
 
-COPY . /app
+RUN a2enmod rewrite
 
-WORKDIR /app
+COPY . /var/www/html/
 
-EXPOSE 8080
-
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "."]
+EXPOSE 80
