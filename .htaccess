@@ -1,0 +1,32 @@
+RewriteEngine On
+
+
+# منع عرض الملفات والمجلدات
+Options -Indexes
+
+
+# HTTPS Redirect (uncomment on production)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+
+# منع الملفات الحساسة
+<FilesMatch "\.(env|sql|log|ini|conf|bak|backup|zip|rar)$">
+    Require all denied
+</FilesMatch>
+
+
+# منع ملفات git
+<FilesMatch "^\.git">
+    Require all denied
+</FilesMatch>
+
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
